@@ -1,0 +1,35 @@
+.filmBlock {
+    display: flex;
+    margin-top: 10px;
+}
+
+.filmInfo {
+    margin-left: 10px;
+}
+
+.filmInfo .name {
+    display: flex;
+    align-items: baseline;
+}
+
+.filmInfo .name h2 {
+    margin-bottom: 0;
+}
+
+.name span {
+    margin-left: 5px;
+    font-weight: bold;
+}
+
+.movieGenre:not(:first-child) {
+    margin-left: 5px;
+}
+
+.castReviews {
+    margin-left: 10px;
+}
+
+.activeLink {
+    color: crimson;
+    font-weight: bold;
+}
