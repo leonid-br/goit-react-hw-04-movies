@@ -1,6 +1,7 @@
 .filmBlock {
     display: flex;
     margin-top: 10px;
+    margin-left: 5px;
 }
 
 .filmInfo {
@@ -32,4 +33,10 @@
 .activeLink {
     color: crimson;
     font-weight: bold;
+}
+
+.btn {
+    margin-top: 5px;
+    margin-left: 5px;
+    font-size: 12px;
 }

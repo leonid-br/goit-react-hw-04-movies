@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
     useParams,
     useRouteMatch,
     Route,
+    Link,
     NavLink,
 } from 'react-router-dom';
-import Cast from '../Cast';
-import Reviews from '../Reviews';
+
 import { fetchFilmDetails } from '../../service/filmfetch-api';
 import style from './MovieDetailsPage.module.css';
 import Loaded from '../Loader';
+import notPhoto from './notPhoto.jpg';
+const Cast = lazy(() => import(/* webpackChunkName: "Cast" */ '../Cast'));
+const Reviews = lazy(() =>
+    import(/* webpackChunkName: "Reviews" */ '../Reviews'),
+);
 
 const MovieDetailsPage = () => {
     const { movieId } = useParams();
     const { url } = useRouteMatch();
-    const [status, setStatus] = useState('idle');
+    const [status, setStatus] = useState('pending');
     const [movie, setMovie] = useState('');
 
     useEffect(() => {
-        setStatus('pending');
         fetchFilmDetails(movieId).then(r => {
             setMovie(r);
             setStatus('resolved');
         });
     }, [movieId]);
-
-    if (status === 'idle') {
-        return <Loaded />;
-    }
 
     if (status === 'pending') {
         return <Loaded />;
@@ -36,29 +36,24 @@ const MovieDetailsPage = () => {
     if (status === 'resolved') {
         return (
             <>
+                <button type="button" className={style.btn}>
+                    <Link to={`/`}>go to back</Link>
+                </button>
                 <div className={style.filmBlock}>
                     <img
-                        src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                        src={
+                            movie.backdrop_path
+                                ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                                : `${notPhoto}`
+                        }
                         alt={movie.original_title}
                     />
                     <div className={style.filmInfo}>
                         <div className={style.name}>
                             <h2>{movie.original_title}</h2>
-                            <span>
-                                (
-                                {movie.release_date.slice(
-                                    0,
-                                    4,
-                                )}
-                                )
-                            </span>
+                            <span>({movie.release_date.slice(0, 4)})</span>
                         </div>
-                        <p>
-                            User Score:{' '}
-                            {(movie.vote_average * 100) /
-                                10}
-                            %
-                        </p>
+                        <p>User Score: {(movie.vote_average * 100) / 10}%</p>
                         <h3>Overview</h3>
                         <p>{movie.overview}</p>
 
@@ -68,9 +63,7 @@ const MovieDetailsPage = () => {
                                 {movie.genres.map(genre => (
                                     <span
                                         key={genre.id}
-                                        className={
-                                            style.movieGenre
-                                        }
+                                        className={style.movieGenre}
                                     >
                                         {genre.name}
                                     </span>
@@ -101,13 +94,14 @@ const MovieDetailsPage = () => {
                 </div>
 
                 <hr />
-
-                <Route path={`${url}/cast`}>
-                    <Cast movieId={movieId} />
-                </Route>
-                <Route path={`${url}/reviews`}>
-                    <Reviews movieId={movieId} />
-                </Route>
+                <Suspense fallback={<Loaded />}>
+                    <Route path={`${url}/cast`}>
+                        <Cast movieId={movieId} />
+                    </Route>
+                    <Route path={`${url}/reviews`}>
+                        <Reviews movieId={movieId} />
+                    </Route>
+                </Suspense>
             </>
         );
     }

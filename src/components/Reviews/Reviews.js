@@ -5,12 +5,8 @@ const Reviews = ({ movieId }) => {
     const [movie, setMovie] = useState([1]);
 
     useEffect(() => {
-        fetchFilmReviews(movieId).then(r =>
-            setMovie(r.results),
-        );
+        fetchFilmReviews(movieId).then(r => setMovie(r.results));
     }, [movieId]);
-
-    console.log('Reviews ~ movie', movie);
 
     return (
         <>

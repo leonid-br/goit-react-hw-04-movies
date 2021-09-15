@@ -6,20 +6,15 @@ import { item } from './HomePage.module.css';
 
 const HomePage = () => {
     const [trendy, setTrendy] = useState([]);
-    const [status, setStatus] = useState('idle');
+    const [status, setStatus] = useState('pending');
     const { url } = useRouteMatch();
 
     useEffect(() => {
-        setStatus('pending');
         fecthTrending().then(r => {
             setTrendy(r.results);
             setStatus('resolved');
         });
     }, []);
-
-    if (status === 'idle') {
-        return <p>Что-то пошло не так</p>;
-    }
 
     if (status === 'pending') {
         return <Loaded />;
@@ -31,17 +26,13 @@ const HomePage = () => {
                 <h1>Trending today</h1>
 
                 <ul>
-                    {trendy.map(
-                        ({ original_title, id }) => (
-                            <li key={id} className={item}>
-                                <Link
-                                    to={`${url}movies/${id}`}
-                                >
-                                    {original_title}
-                                </Link>
-                            </li>
-                        ),
-                    )}
+                    {trendy.map(({ original_title, id }) => (
+                        <li key={id} className={item}>
+                            <Link to={`${url}movies/${id}`}>
+                                {original_title}
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </div>
         );
