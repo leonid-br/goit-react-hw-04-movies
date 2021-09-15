@@ -33,7 +33,7 @@ const MovieDetailsPage = () => {
     }, [movieId]);
 
     const onGoBack = () => {
-        history.push(location?.state?.from ?? '/movies');
+        history.push(location?.state?.from ?? '/');
     };
 
     if (status === 'pending') {
@@ -88,9 +88,8 @@ const MovieDetailsPage = () => {
                         to={{
                             pathname: `${url}/cast`,
                             state: {
-                                from: location.state.from,
-
-                                label: location.state.label,
+                                from: location?.state?.from ?? '/',
+                                label: location?.state?.label ?? 'go back',
                             },
                         }}
                         activeClassName={style.activeLink}
@@ -102,9 +101,8 @@ const MovieDetailsPage = () => {
                         to={{
                             pathname: `${url}/reviews`,
                             state: {
-                                from: location.state.from,
-
-                                label: location.state.label,
+                                from: location?.state?.from ?? '/',
+                                label: location?.state?.label ?? 'go back',
                             },
                         }}
                         className={style.addInfo}
