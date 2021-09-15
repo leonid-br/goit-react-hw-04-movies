@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import Loaded from '../Loader';
 import { fecthTrending } from '../../service/filmfetch-api';
 import { item } from './HomePage.module.css';
+import Loaded from '../Loader';
 
 const HomePage = () => {
     const [trendy, setTrendy] = useState([]);
@@ -28,7 +28,15 @@ const HomePage = () => {
                 <ul>
                     {trendy.map(({ original_title, id }) => (
                         <li key={id} className={item}>
-                            <Link to={`${url}movies/${id}`}>
+                            <Link
+                                to={{
+                                    pathname: `${url}movies/${id}`,
+                                    state: {
+                                        from: '/',
+                                        label: 'go to trending',
+                                    },
+                                }}
+                            >
                                 {original_title}
                             </Link>
                         </li>

@@ -2,15 +2,16 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import {
     useParams,
     useRouteMatch,
+    useHistory,
+    useLocation,
     Route,
-    Link,
     NavLink,
 } from 'react-router-dom';
-
 import { fetchFilmDetails } from '../../service/filmfetch-api';
 import style from './MovieDetailsPage.module.css';
 import Loaded from '../Loader';
 import notPhoto from './notPhoto.jpg';
+
 const Cast = lazy(() => import(/* webpackChunkName: "Cast" */ '../Cast'));
 const Reviews = lazy(() =>
     import(/* webpackChunkName: "Reviews" */ '../Reviews'),
@@ -19,6 +20,8 @@ const Reviews = lazy(() =>
 const MovieDetailsPage = () => {
     const { movieId } = useParams();
     const { url } = useRouteMatch();
+    const history = useHistory();
+    const location = useLocation();
     const [status, setStatus] = useState('pending');
     const [movie, setMovie] = useState('');
 
@@ -29,6 +32,10 @@ const MovieDetailsPage = () => {
         });
     }, [movieId]);
 
+    const onGoBack = () => {
+        history.push(location?.state?.from ?? '/movies');
+    };
+
     if (status === 'pending') {
         return <Loaded />;
     }
@@ -36,8 +43,8 @@ const MovieDetailsPage = () => {
     if (status === 'resolved') {
         return (
             <>
-                <button type="button" className={style.btn}>
-                    <Link to={`/`}>go to back</Link>
+                <button type="button" className={style.btn} onClick={onGoBack}>
+                    {location?.state?.label ?? 'go back'}
                 </button>
                 <div className={style.filmBlock}>
                     <img
@@ -78,14 +85,28 @@ const MovieDetailsPage = () => {
                     <h4>Addition information</h4>
 
                     <NavLink
-                        to={`${url}/cast`}
+                        to={{
+                            pathname: `${url}/cast`,
+                            state: {
+                                from: location.state.from,
+
+                                label: location.state.label,
+                            },
+                        }}
                         activeClassName={style.activeLink}
                     >
                         Cast
                     </NavLink>
                     <br />
                     <NavLink
-                        to={`${url}/reviews`}
+                        to={{
+                            pathname: `${url}/reviews`,
+                            state: {
+                                from: location.state.from,
+
+                                label: location.state.label,
+                            },
+                        }}
                         className={style.addInfo}
                         activeClassName={style.activeLink}
                     >

@@ -1,19 +1,18 @@
 import { NavLink } from 'react-router-dom';
 import { link } from '../Navigation/Navigation.module.css';
+import { notFound } from './NotFoundView.module.css';
 
 const NotFoundView = () => {
     return (
-        <>
-            <h2>
-                Запрашиваемой вами страницы не существует
-            </h2>
+        <div className={notFound}>
+            <h2>The page does not exist</h2>
             <p>
-                Вернуться на домашнюю страницу
+                Return to home page
                 <NavLink to="/" className={link}>
                     Click here
                 </NavLink>
             </p>
-        </>
+        </div>
     );
 };
 

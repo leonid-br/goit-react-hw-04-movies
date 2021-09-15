@@ -47,6 +47,7 @@ const MoviesPage = () => {
         if (location.search === '') {
             return;
         }
+
         setStatus('pending');
 
         fetchFilmName(queryUrl).then(r => {
@@ -81,7 +82,7 @@ const MoviesPage = () => {
             <div>
                 <Form onChange={onChange} onSubmit={onSubmit} value={query} />
 
-                <h3>{error} </h3>
+                <h3>{error}</h3>
             </div>
         );
     }
@@ -91,17 +92,24 @@ const MoviesPage = () => {
             <div>
                 <Form onChange={onChange} onSubmit={onSubmit} value={query} />
 
-                {searchMovies && (
-                    <ul>
-                        {searchMovies.results.map(({ original_title, id }) => (
-                            <li key={id}>
-                                <Link to={`/movies/${id}`}>
-                                    {original_title}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                )}
+                <ul>
+                    {searchMovies.results.map(({ original_title, id }) => (
+                        <li key={id}>
+                            <Link
+                                to={{
+                                    pathname: `/movies/${id}`,
+                                    state: {
+                                        from: `${location.pathname}${location.search}`,
+
+                                        label: 'go to search',
+                                    },
+                                }}
+                            >
+                                {original_title}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
             </div>
         );
     }
